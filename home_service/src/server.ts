@@ -2,7 +2,7 @@ import app from './app';
 import sequelize from './config/database';
 import './models';
 
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.PORT || 3003;
 
 sequelize.sync({ alter: true }).then(() => {
   console.log('DB synced');
