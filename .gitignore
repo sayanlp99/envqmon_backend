@@ -1,0 +1,33 @@
+# Node modules (recursively ignore in all microservices)
+**/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files 
+.env
+
+# TypeScript build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Coverage / test output
+coverage/
+.nyc_output/
+
+# Sequelize migration artifacts (if using custom output dirs, adjust accordingly)
+sequelize.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
