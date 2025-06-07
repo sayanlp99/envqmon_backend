@@ -19,6 +19,18 @@
 # user_service
     curl -X GET http://localhost:3002/api/users
 #-----------------------------------------------------------#
+#home_service
+    # curl -X POST http://localhost:3003/api/homes \
+    # -H "Content-Type: application/json" \
+    # -d '{
+    #     "home_name": "My Home",
+    #     "created_by": "22222222-2222-2222-2222-222222222222",
+    #     "metadata": {
+    #         "location": "City Center"
+    #     }
+    # }'
+    curl http://localhost:3003/api/homes
+#-----------------------------------------------------------#
 # device_service
     curl -X POST http://localhost:3004/api/devices \
     -H "Content-Type: application/json" \
@@ -35,6 +47,4 @@
     curl http://localhost:3004/api/devices
 #-----------------------------------------------------------#
 # device_data_service
-#-----------------------------------------------------------#
-#home
 #-----------------------------------------------------------#
