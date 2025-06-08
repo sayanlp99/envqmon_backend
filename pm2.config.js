@@ -19,15 +19,6 @@ module.exports = {
       }
     },
     {
-      name: 'user-service',
-      script: 'npm',
-      args: 'start',
-      cwd: './user_service',
-      env: {
-        NODE_ENV: 'production'
-      }
-    },
-    {
       name: 'device-service',
       script: 'npm',
       args: 'start',
