@@ -21,3 +21,44 @@ export const login = async (email: string, password: string) => {
   const token = generateToken({ user_id: user.getDataValue("user_id"), role: user.getDataValue("role") });
   return { token };
 };
+
+export const getAllUsers = async () => {
+  const users = await User.findAll();
+  return users.map(user => ({
+    user_id: user.getDataValue("user_id"),
+    name: user.getDataValue("name"),
+    email: user.getDataValue("email"),
+    role: user.getDataValue("role"),
+    is_active: user.getDataValue("is_active"),
+    created_at: user.getDataValue("created_at"),
+    updated_at: user.getDataValue("updated_at"),
+  }));
+};
+
+export const updateUser = async (id: string, name?: string, email?: string, password?: string, is_active?: boolean) => {
+  const user = await User.findByPk(id);
+  if (!user) throw new Error("User not found");
+
+  if (email) {
+    const existing = await User.findOne({ where: { email } });
+    if (existing && existing.getDataValue("user_id") !== user.getDataValue("user_id")) {
+      throw new Error("Email already in use");
+    }
+    user.setDataValue("email", email);
+  }
+  if (name) user.setDataValue("name", name);
+  if (password) {
+    const password_hash = await bcrypt.hash(password, 10);
+    user.setDataValue("password_hash", password_hash);
+  }
+  if (is_active !== undefined) user.setDataValue("is_active", is_active);
+  await user.save();
+  return {
+    user_id: user.getDataValue("user_id"),
+    name: user.getDataValue("name"),
+    email: user.getDataValue("email"),
+    is_active: user.getDataValue("is_active"),
+    created_at: user.getDataValue("created_at"),
+    updated_at: user.getDataValue("updated_at"),
+  };
+};
