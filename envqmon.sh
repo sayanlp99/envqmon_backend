@@ -20,16 +20,22 @@
     curl -X GET http://localhost:3002/api/users
 #-----------------------------------------------------------#
 #home_service
-    # curl -X POST http://localhost:3003/api/homes \
-    # -H "Content-Type: application/json" \
-    # -d '{
-    #     "home_name": "My Home",
-    #     "created_by": "22222222-2222-2222-2222-222222222222",
-    #     "metadata": {
-    #         "location": "City Center"
-    #     }
-    # }'
-    curl http://localhost:3003/api/homes
+    curl -X POST http://localhost:3003/api/homes \
+    -H "Content-Type: application/json" \
+    -d '{
+        "home_name": "Sayan Residence",
+        "user_id": "11111111-1111-1111-1111-111111111111",
+        "address": "Kolkata"
+    }'
+    curl http://localhost:3003/api/homes/1bada3d2-5ce2-420c-8694-ae4c265548c4
+    curl -X POST http://localhost:3003/api/rooms \
+    -H "Content-Type: application/json" \
+    -d '{
+        "room_name": "Bedroom",
+        "type": "Living",
+        "home_id": "1bada3d2-5ce2-420c-8694-ae4c265548c4"
+    }'
+    curl http://localhost:300curl http://localhost:3003/api/rooms
 #-----------------------------------------------------------#
 # device_service
     curl -X POST http://localhost:3004/api/devices \
