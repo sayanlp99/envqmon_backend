@@ -1,4 +1,4 @@
-curl -X POST http://localhost:3003/api/devices \
+curl -X POST http://localhost:3002/api/devices \
   -H "Content-Type: application/json" \
   -d '{
     "device_name": "Sensor A",
@@ -10,5 +10,5 @@ curl -X POST http://localhost:3003/api/devices \
       "location": "Room 101"
     }
   }'
-curl http://localhost:3003/api/devices
+curl http://localhost:3002/api/devices
 
