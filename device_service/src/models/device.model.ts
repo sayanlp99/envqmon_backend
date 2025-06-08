@@ -18,6 +18,10 @@ Device.init({
     allowNull: false,
     unique: true
   },
+  user_id: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   is_active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
