@@ -35,7 +35,7 @@
         "type": "Living",
         "home_id": "1bada3d2-5ce2-420c-8694-ae4c265548c4"
     }'
-    curl http://localhost:300curl http://localhost:3003/api/rooms
+    curl http://localhost:3003/api/rooms
 #-----------------------------------------------------------#
 # device_service
     curl -X POST http://localhost:3004/api/devices \
