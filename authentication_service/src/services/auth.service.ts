@@ -19,7 +19,16 @@ export const login = async (email: string, password: string) => {
   if (!valid) throw new Error("Invalid credentials");
 
   const token = generateToken({ user_id: user.getDataValue("user_id"), role: user.getDataValue("role") });
-  return { token };
+  const user_object = {
+    user_id: user.getDataValue("user_id"),
+    name: user.getDataValue("name"),
+    email: user.getDataValue("email"),
+    role: user.getDataValue("role"),
+    is_active: user.getDataValue("is_active"),
+    created_at: user.getDataValue("created_at"),
+    updated_at: user.getDataValue("updated_at"),
+  }
+  return { token, ...user_object };
 };
 
 export const getAllUsers = async () => {
