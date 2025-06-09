@@ -1,15 +1,6 @@
 module.exports = {
   apps: [
     {
-      name: 'api-gateway',
-      script: 'npm',
-      args: 'start',
-      cwd: './api_gateway',
-      env: {
-        NODE_ENV: 'production'
-      }
-    },
-    {
       name: 'auth-service',
       script: 'npm',
       args: 'start',
