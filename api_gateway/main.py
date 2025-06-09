@@ -213,9 +213,14 @@ async def get_all_users(request: Request, current_user: Dict[str, Any] = Depends
     """
     Retrieves all users from the authentication service.
     Requires authentication via API Gateway's JWT.
-    (Note: In a real app, this might be restricted to admin users).
+    this will be restricted to users whose role will be admin only.
     """
     print(f"Authenticated user accessing /api/auth/users: {current_user}")
+    if current_user.get("role", "admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to update this user."
+        )
     return await forward_request(request, AUTH_SERVICE_URL, "/api/auth/users", current_user)
 
 @app.put("/api/auth/users/{user_id}")
@@ -226,8 +231,8 @@ async def update_user(user_id: str, request: Request, current_user: Dict[str, An
     or an admin can update any profile.
     """
     print(f"Authenticated user updating user {user_id}: {current_user}")
-    # Optional: Add authorization logic here (e.g., current_user["user_id"] == user_id or current_user["is_admin"])
-    if current_user["user_id"] != user_id and not current_user.get("is_admin", False):
+    # Optional: Add authorization logic here (e.g., current_user["role"] == admin)
+    if current_user.get("role", "admin"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to update this user."
