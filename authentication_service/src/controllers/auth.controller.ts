@@ -33,8 +33,8 @@ export const listAllUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, email, password, is_active } = req.body;
-    const user = await AuthService.updateUser(id, name, email, password, is_active);
+    const { name, password, is_active } = req.body;
+    const user = await AuthService.updateUser(id, name, password, is_active);
     res.json(user);
   } catch (err: any) {
     res.status(400).json({ error: err.message });

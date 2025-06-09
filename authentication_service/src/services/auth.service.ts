@@ -44,17 +44,9 @@ export const getAllUsers = async () => {
   }));
 };
 
-export const updateUser = async (id: string, name?: string, email?: string, password?: string, is_active?: boolean) => {
+export const updateUser = async (id: string, name?: string, password?: string, is_active?: boolean) => {
   const user = await User.findByPk(id);
   if (!user) throw new Error("User not found");
-
-  if (email) {
-    const existing = await User.findOne({ where: { email } });
-    if (existing && existing.getDataValue("user_id") !== user.getDataValue("user_id")) {
-      throw new Error("Email already in use");
-    }
-    user.setDataValue("email", email);
-  }
   if (name) user.setDataValue("name", name);
   if (password) {
     const password_hash = await bcrypt.hash(password, 10);
