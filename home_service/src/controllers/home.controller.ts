@@ -11,6 +11,22 @@ export const getAllHomes = async (_req: Request, res: Response) => {
   res.json(homes);
 };
 
+export const getUserHomes = async (req: Request, res: Response) => {
+  const userId = req.params.user_id;
+  if (!userId) {
+    res.status(400).json({ message: 'User ID is required' });
+  }
+  else{
+    const homes = await homeService.getUserHomes(userId);
+    if (homes.length === 0) {
+      res.status(404).json({ message: 'No homes found for this user' });
+    }
+    else{
+      res.json(homes);
+    }
+  }
+};
+
 export const getHomeById = async (req: Request, res: Response) => {
   const home = await homeService.getHomeById(req.params.id);
   res.json(home);
