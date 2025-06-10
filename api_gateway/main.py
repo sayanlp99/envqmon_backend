@@ -217,7 +217,10 @@ async def update_user(user_id: str, request: Request, current_user: Dict[str, An
 async def create_home(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Creates a new home. Requires authentication."""
     print(f"Authenticated user creating home: {current_user}")
-    return await forward_request(request, HOME_SERVICE_URL, "/api/homes", current_user)
+    if current_user.get("role") != "admin":
+        return await forward_request(request, HOME_SERVICE_URL, f"/api/homes/user/{current_user.get("user_id")}", current_user) 
+    else:
+        return await forward_request(request, HOME_SERVICE_URL, "/api/homes", current_user)
 
 @app.get("/api/homes/{home_id}")
 async def get_home_by_id(home_id: str, request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
