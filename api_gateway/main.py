@@ -247,7 +247,11 @@ async def create_device(request: Request, current_user: Dict[str, Any] = Depends
 async def get_all_devices(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Retrieves all devices. Requires authentication."""
     print(f"Authenticated user getting all devices: {current_user}")
-    return await forward_request(request, DEVICE_SERVICE_URL, "/api/devices", current_user)
+    if current_user.get("role") != "admin":
+        return await forward_request(request, DEVICE_SERVICE_URL, f"/api/devices/user/{current_user.get('user_id')}", current_user)
+    else:
+        return await forward_request(request, DEVICE_SERVICE_URL, "/api/devices", current_user)
+    
 
 @app.get("/api/data/range")
 async def get_device_data_range(
