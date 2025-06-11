@@ -238,7 +238,10 @@ async def create_room(request: Request, current_user: Dict[str, Any] = Depends(g
 async def get_all_rooms(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Retrieves all rooms. Requires authentication."""
     print(f"Authenticated user getting all rooms: {current_user}")
-    return await forward_request(request, HOME_SERVICE_URL, "/api/rooms", current_user)
+    if current_user.get("role") != "admin":
+        return await forward_request(request, HOME_SERVICE_URL, f"/api/rooms/user/{current_user.get('user_id')}", current_user)
+    else:
+        return await forward_request(request, HOME_SERVICE_URL, "/api/rooms", current_user)
 
 @app.post("/api/devices")
 async def create_device(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
