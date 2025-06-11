@@ -31,3 +31,6 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Ignore package lock files to avoid conflicts in monorepo setups
+**/package-lock.json
