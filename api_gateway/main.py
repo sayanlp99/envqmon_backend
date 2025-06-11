@@ -6,19 +6,30 @@ from typing import Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 
-AUTH_SERVICE_URL = "http://localhost:3001"
-HOME_SERVICE_URL = "http://localhost:3002"
-DEVICE_SERVICE_URL = "http://localhost:3003"
-DEVICE_DATA_SERVICE_URL = "http://localhost:3004"
-SECRET_KEY = "VO4BT4TGYOWV3N48CFRJOQ384RYH3I4GTUEBG4IQ8CU2O4HJQ3N4M9MR48T49GIWHTFWUTF4RGRHOWN4BG54IIYFHRJOUIYHWUY"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL")
+HOME_SERVICE_URL = os.getenv("HOME_SERVICE_URL")
+DEVICE_SERVICE_URL = os.getenv("DEVICE_SERVICE_URL")
+DEVICE_DATA_SERVICE_URL = os.getenv("DEVICE_DATA_SERVICE_URL")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "86400"))
 
 app = FastAPI(
     title="Microservices API Gateway",
     description="Gateway for Authentication, Home, Device, and Device Data services.",
     version="1.0.0",
+    docs_url=None,  
+    redoc_url="/docs", 
+    contact={
+        "name": "Sayan Chakraborty",
+        "email": "sayan.chakraborty1999@gmail.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    },
 )
+
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     """Creates a JWT access token."""
@@ -218,7 +229,7 @@ async def create_home(request: Request, current_user: Dict[str, Any] = Depends(g
     """Creates a new home. Requires authentication."""
     print(f"Authenticated user creating home: {current_user}")
     if current_user.get("role") != "admin":
-        return await forward_request(request, HOME_SERVICE_URL, f"/api/homes/user/{current_user.get("user_id")}", current_user) 
+        return await forward_request(request, HOME_SERVICE_URL, f"/api/homes/user/{current_user.get('user_id')}", current_user) 
     else:
         return await forward_request(request, HOME_SERVICE_URL, "/api/homes", current_user)
 
