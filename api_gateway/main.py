@@ -15,11 +15,11 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "86400"))
 
 app = FastAPI(
-    title="Microservices API Gateway",
+    title="EnvQmon Microservices API Gateway",
     description="Gateway for Authentication, Home, Device, and Device Data services.",
     version="1.0.0",
-    docs_url=None,  
-    redoc_url="/docs", 
+    docs_url=None,
+    redoc_url="/docs",
     contact={
         "name": "Sayan Chakraborty",
         "email": "sayan.chakraborty1999@gmail.com",
