@@ -5,6 +5,7 @@ const router = Router();
 
 router.post('/', controller.createRoom);
 router.get('/', controller.getAllRooms);
+router.get('/user/:user_id', controller.getUserRooms);
 router.get('/:id', controller.getRoomById);
 router.get('/home/:home_id', controller.getRoomsByHomeId);
 router.put('/:id', controller.updateRoom);

@@ -11,6 +11,20 @@ export const getAllRooms = async (_req: Request, res: Response) => {
   res.json(rooms);
 };
 
+export const getUserRooms = async (req: Request, res: Response) => {
+  const userId = req.params.user_id;
+  if (!userId) {
+    res.status(400).json({ message: 'User ID is required' });
+    return;
+  }
+  const rooms = await roomService.getUserRooms(userId);
+  if (rooms.length === 0) {
+    res.status(404).json({ message: 'No rooms found for this user' });
+  } else {
+    res.json(rooms);
+  }
+};
+
 export const getRoomById = async (req: Request, res: Response) => {
   const room = await roomService.getRoomById(req.params.id);
   res.json(room);
