@@ -280,7 +280,7 @@ async def get_all_devices(request: Request, current_user: Dict[str, Any] = Depen
         return await forward_request(request, DEVICE_SERVICE_URL, "/api/devices", current_user)
 
 
-@router.get("/api/data/range")
+@app.get("/api/data/range")
 async def get_device_data_range(
     device_id: str = Query(..., description="Device ID"),
     from_timestamp: int = Query(..., description="Start of time range (Unix timestamp)"),
