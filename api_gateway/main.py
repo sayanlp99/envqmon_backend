@@ -291,8 +291,19 @@ async def get_device_data_range(
     Retrieves device data within a specific time range.
     Requires authentication.
     """
+    if not device_id or not from_timestamp or not to_timestamp:
+        raise HTTPException(status_code=400, detail="device_id, from_timestamp, and to_timestamp are required")
+
     print(f"Authenticated user getting device data range for {device_id}: {current_user}")
-    path = f"/api/data/range?device_id={device_id}&from={from_timestamp}&to={to_timestamp}"
+
+    # Properly encode the query string to avoid malformed URLs
+    query_params = urlencode({
+        "device_id": device_id,
+        "from": from_timestamp,
+        "to": to_timestamp
+    })
+
+    path = f"/api/data/range?{query_params}"
     return await forward_request(request, DEVICE_DATA_SERVICE_URL, path, current_user)
 
 @app.get("/api/data/latest/{device_id}")
