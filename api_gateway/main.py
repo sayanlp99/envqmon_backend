@@ -280,11 +280,11 @@ async def get_all_devices(request: Request, current_user: Dict[str, Any] = Depen
         return await forward_request(request, DEVICE_SERVICE_URL, "/api/devices", current_user)
 
 
-@app.get("/api/data/range")
+@router.get("/api/data/range")
 async def get_device_data_range(
-    device_id: str,
-    from_timestamp: int,
-    to_timestamp: int,
+    device_id: str = Query(..., description="Device ID"),
+    from_timestamp: int = Query(..., description="Start of time range (Unix timestamp)"),
+    to_timestamp: int = Query(..., description="End of time range (Unix timestamp)"),
     request: Request,
     current_user: Dict[str, Any] = Depends(get_current_user)
 ):
@@ -297,11 +297,11 @@ async def get_device_data_range(
 
     print(f"Authenticated user getting device data range for {device_id}: {current_user}")
 
-    # Properly encode the query string to avoid malformed URLs
+    # Clean and encode query parameters safely
     query_params = urlencode({
-        "device_id": device_id,
-        "from": from_timestamp,
-        "to": to_timestamp
+        "device_id": device_id.strip(),
+        "from": str(int(from_timestamp)),
+        "to": str(int(to_timestamp))
     })
 
     path = f"/api/data/range?{query_params}"
