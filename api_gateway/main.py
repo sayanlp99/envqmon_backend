@@ -281,8 +281,8 @@ async def get_all_devices(request: Request, current_user: Dict[str, Any] = Depen
 @app.get("/api/data/range")
 async def get_device_data_range(
     device_id: str,
-    from_timestamp: int,
-    to_timestamp: int,
+    from: int,
+    to: int,
     request: Request,
     current_user: Dict[str, Any] = Depends(get_current_user)
 ):
@@ -291,7 +291,7 @@ async def get_device_data_range(
     Requires authentication.
     """
     print(f"Authenticated user getting device data range for {device_id}: {current_user}")
-    path = f"/api/data/range?device_id={device_id}&from={from_timestamp}&to={to_timestamp}"
+    path = f"/api/data/range?device_id={device_id}&from={from}&to={to}"
     return await forward_request(request, DEVICE_DATA_SERVICE_URL, path, current_user)
 
 @app.get("/api/data/latest/{device_id}")
