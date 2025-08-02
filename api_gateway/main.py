@@ -8,6 +8,7 @@ from httpx import AsyncClient, HTTPStatusError
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
+from urllib.parse import urlencode
 
 AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL")
 HOME_SERVICE_URL = os.getenv("HOME_SERVICE_URL")
