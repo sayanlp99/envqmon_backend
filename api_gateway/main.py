@@ -184,7 +184,7 @@ async def login_user(request: Request):
         "user_id": user_id,
         "email": user_email,
         "name": user_info.get("name", "Unknown User"),
-        "roles": user_info.get("roles", []), 
+        "roles": user_info.get("roles", []),
         "is_active": user_info.get("is_active", True),
     }
 
@@ -192,7 +192,7 @@ async def login_user(request: Request):
         content={
             "message": "Login successful",
             "access_token": access_token,
-            "user": user_info 
+            "user": user_info
         },
         status_code=status.HTTP_200_OK
     )
@@ -233,6 +233,15 @@ async def create_home(request: Request, current_user: Dict[str, Any] = Depends(g
     print(f"Authenticated user creating home: {current_user}")
     return await forward_request(request, HOME_SERVICE_URL, "/api/homes", current_user)
 
+@app.get("/api/homes")
+async def get_all_homes(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
+    """Retrieves all rooms. Requires authentication."""
+    print(f"Authenticated user getting all rooms: {current_user}")
+    if current_user.get("role") != "admin":
+        return await forward_request(request, HOME_SERVICE_URL, f"/api/homes/user/{current_user.get('user_id')}", current_user)
+    else:
+        return await forward_request(request, HOME_SERVICE_URL, "/api/homes", current_user)
+
 @app.get("/api/homes/{home_id}")
 async def get_home_by_id(home_id: str, request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Retrieves a specific home by ID. Requires authentication."""
@@ -268,7 +277,7 @@ async def get_all_devices(request: Request, current_user: Dict[str, Any] = Depen
         return await forward_request(request, DEVICE_SERVICE_URL, f"/api/devices/user/{current_user.get('user_id')}", current_user)
     else:
         return await forward_request(request, DEVICE_SERVICE_URL, "/api/devices", current_user)
-    
+
 
 @app.get("/api/data/range")
 async def get_device_data_range(
