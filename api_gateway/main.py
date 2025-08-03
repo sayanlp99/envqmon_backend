@@ -4,6 +4,7 @@ load_dotenv()
 import os
 from fastapi import FastAPI, Request, HTTPException, Depends, status
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from httpx import AsyncClient, HTTPStatusError
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
@@ -31,6 +32,17 @@ app = FastAPI(
         "name": "MIT License",
         "url": "https://opensource.org/licenses/MIT",
     },
+)
+
+cors_origins_raw = os.getenv("CORS_ORIGINS", "")
+origins = [origin.strip() for origin in cors_origins_raw.split(",") if origin.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
