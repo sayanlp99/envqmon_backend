@@ -35,6 +35,15 @@ module.exports = {
       env: {
         NODE_ENV: 'production'
       }
+    },
+    {
+      name: 'alert-service',
+      script: 'npm',
+      args: 'start',
+      cwd: './alert_service',
+      env: {
+        NODE_ENV: 'production'
+      }
     }
   ]
 };
