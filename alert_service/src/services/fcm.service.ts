@@ -13,7 +13,7 @@ export class FCMService {
     };
 
     try {
-      await admin.messaging().sendMulticast(message);
+      await admin.messaging().sendEachForMulticast(message);
       console.log('FCM alerts sent successfully');
     } catch (error) {
       console.error('FCM send error:', error);
