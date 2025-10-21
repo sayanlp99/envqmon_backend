@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import User from '../models/User';
 
 export class UserController {
-  static async registerDevice(req: Request, res: Response): Promise<void> {
+  static async registerOrUpdateDevice(req: Request, res: Response): Promise<void> {
     try {
       const { userId, fcmToken } = req.body;
       if (!userId || !fcmToken) {
@@ -19,23 +19,9 @@ export class UserController {
         await user.update({ fcmToken, updatedAt: new Date() });
       }
 
-      res.status(201).json({ message: 'Device registered successfully' });
-    } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  }
-
-  // Additional CRUD: Update token
-  static async updateToken(req: Request, res: Response): Promise<void> {
-    try {
-      const { userId, fcmToken } = req.body;
-      const user = await User.findByPk(userId);
-      if (!user) {
-        res.status(404).json({ error: 'User not found' });
-        return;
-      }
-      await user.update({ fcmToken, updatedAt: new Date() });
-      res.json({ message: 'Token updated' });
+      const status = created ? 201 : 200;
+      const message = created ? 'Device registered successfully' : 'Device token updated successfully';
+      res.status(status).json({ message });
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
