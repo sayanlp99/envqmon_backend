@@ -23,6 +23,17 @@ export class AlertController {
     }
   }
 
+  // Get alerts by user ID
+  static async getAlertsByUser(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = req.params;
+      const alerts = await AlertService.getAlertsByUser(userId);
+      res.json(alerts);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
   // Delete alert
   static async deleteAlert(req: Request, res: Response): Promise<void> {
     try {

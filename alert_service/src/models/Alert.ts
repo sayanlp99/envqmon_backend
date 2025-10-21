@@ -8,6 +8,7 @@ interface IAlertAttributes {
   unit?: string;
   timestamp: number;
   deviceTopic?: string;
+  userId?: string;
   createdAt?: Date;
 }
 
@@ -41,6 +42,10 @@ Alert.init(
     },
     deviceTopic: {
       type: DataTypes.STRING,
+    },
+    userId: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,

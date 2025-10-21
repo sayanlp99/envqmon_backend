@@ -69,7 +69,7 @@ export class AlertService {
   }
 
   static async getAlertsByUser(userId: string): Promise<any[]> {
-    // Assuming alerts are global for simplicity; filter by user if needed in future
-    return Alert.findAll({ order: [['createdAt', 'DESC']], limit: 50 });
+    // Assuming alerts are global for simplicity; filter by user
+    return Alert.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
   }
 }
