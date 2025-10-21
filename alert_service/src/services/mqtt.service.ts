@@ -16,7 +16,7 @@ client.on('message', async (topic, message) => {
 
       await AlertService.generateAlert(violation.type, violation.value, violation.unit || '', data.recorded_at, topic, userId);
       
-      const tokens = await AlertService.getUserTokens();
+      const tokens = await AlertService.getUserTokens(userId);
       const title = `Alert: ${violation.type.replace('_', ' ').toUpperCase()}`;
       const body = `${violation.type}: ${violation.value}${violation.unit} at ${new Date(data.recorded_at * 1000).toISOString()}`;
       

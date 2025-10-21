@@ -63,8 +63,8 @@ export class AlertService {
     return violations;
   }
 
-  static async getUserTokens(): Promise<string[]> {
-    const users = await User.findAll({ attributes: ['fcmToken'] });
+  static async getUserTokens(userId: string): Promise<string[]> {
+    const users = await User.findAll({ where: { userId: userId }, attributes: ['fcmToken'] });
     return users.map((u: any) => u.fcmToken);
   }
 
