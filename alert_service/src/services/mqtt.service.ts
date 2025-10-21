@@ -1,5 +1,6 @@
 import client from '../config/mqtt.config';
 import { AlertService } from './alert.service';
+import { DeviceService } from './device.service';
 import { FCMService } from './fcm.service';
 
 client.on('message', async (topic, message) => {
@@ -10,7 +11,10 @@ client.on('message', async (topic, message) => {
     const violations = AlertService.checkLimits(data);
 
     for (const violation of violations) {
-      await AlertService.generateAlert(violation.type, violation.value, violation.unit || '', data.recorded_at, topic);
+      const deviceId = topic.split('/').pop() || '';
+      const userId = await DeviceService.getUserIdByDeviceId(deviceId);
+
+      await AlertService.generateAlert(violation.type, violation.value, violation.unit || '', data.recorded_at, topic, userId);
       
       const tokens = await AlertService.getUserTokens();
       const title = `Alert: ${violation.type.replace('_', ' ').toUpperCase()}`;

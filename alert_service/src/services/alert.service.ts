@@ -3,8 +3,8 @@ import Alert from '../models/Alert';
 import { LIMITS } from '../config/limits.config';
 
 export class AlertService {
-  static async generateAlert(alertType: string, value: number, unit: string, timestamp: number, deviceTopic?: string): Promise<void> {
-    await Alert.create({ alertType, value, unit, timestamp, deviceTopic });
+  static async generateAlert(alertType: string, value: number, unit: string, timestamp: number, deviceTopic?: string, userId?: string): Promise<void> {
+    await Alert.create({ alertType, value, unit, timestamp, deviceTopic, userId });
   }
 
   static checkLimits(data: any): { type: string; value: number; unit: string }[] {
