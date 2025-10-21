@@ -320,13 +320,13 @@ async def get_latest_device_data(device_id: str, request: Request, current_user:
 async def register_alert(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Registers a new alert. Requires authentication."""
     print(f"Authenticated user registering alert: {current_user}")
-    return await forward_request(request, ALERT_SERVICE_URL, "/users/register", current_user)
+    return await forward_request(request, ALERT_SERVICE_URL, "/api/users/register", current_user)
 
 @app.get("/api/alerts")
 async def get_user_alerts(request: Request, current_user: Dict[str, Any] = Depends(get_current_user)):
     """Retrieves all alerts for the authenticated user."""
     print(f"Authenticated user getting alerts: {current_user}")
-    return await forward_request(request, ALERT_SERVICE_URL, f"/alerts?userId={current_user.get('user_id')}", current_user)
+    return await forward_request(request, ALERT_SERVICE_URL, f"/api/alerts?userId={current_user.get('user_id')}", current_user)
 
 if __name__ == "__main__":
     import uvicorn
