@@ -104,7 +104,7 @@ async def get_current_user(request: Request):
     return {"user_id": user_id, "email": payload.get("email"), "role": user_role}
 
 
-client = AsyncClient(timeout=30.0)
+client = AsyncClient(http2=False, timeout=30.0)
 
 async def forward_request(
     request: Request,
@@ -119,31 +119,60 @@ async def forward_request(
     target_url = f"{service_url}{path}"
     print(f"Forwarding {request.method} {request.url.path} to {target_url}")
 
-    headers = {k: v for k, v in request.headers.items() if k.lower() not in ["host", "authorization"]}
+    # Strip all common client/proxy/Postman noise headers
+    exclude_headers = [
+        "host", "authorization", "postman-token", "x-real-ip", "cache-control",
+        "accept-encoding", "connection", "user-agent", "accept", "content-length",
+        "cf-ray", "x-forwarded-for", "x-forwarded-host", "x-forwarded-proto"
+    ]
+    headers = {k: v for k, v in request.headers.items() if k.lower() not in exclude_headers}
 
     if authenticated_user:
         headers["X-Authenticated-User-ID"] = authenticated_user["user_id"]
         headers["X-Authenticated-User-Email"] = authenticated_user["email"]
 
+    # Enforce clean, curl-like headers to match successful tests
+    headers["Accept"] = "application/json"
+    headers["User-Agent"] = "curl/8.0.1"
+    headers["Connection"] = "close"
+    headers["Accept-Encoding"] = "identity"  # Disable compression to match curl default (no gzip)
+
     request_body = await request.body()
     if not request_body:
         request_body = None
 
+    print(f"Headers sent to service: {headers}")  # Debug: exact headers before httpx
+
+    # Preserve baked-in query in path; only append client params if no query in path
+    if '?' in path:
+        url_to_use = target_url
+        params_to_use = None
+    else:
+        url_to_use = f"{service_url}{path}"
+        params_to_use = dict(request.query_params)
+
     try:
         response = await client.request(
             method=request.method,
-            url=target_url,
+            url=url_to_use,
             headers=headers,
-            params=request.query_params,
+            params=params_to_use,
             content=request_body,
         )
+        print(f"Response status from service: {response.status_code}")  # Debug
+        print(f"Response headers from service: {dict(response.headers)}")  # Debug
         response.raise_for_status()
         return JSONResponse(content=response.json(), status_code=response.status_code)
     except HTTPStatusError as e:
-        print(f"Microservice error: {e.response.status_code} - {e.response.text}")
+        print(f"Microservice error: {e.response.status_code} - {e.response.text}")  # Full body
+        print(f"Full response URL from httpx: {e.request.url}")  # What httpx actually hit
+        try:
+            detail = e.response.json()
+        except:
+            detail = e.response.text
         raise HTTPException(
             status_code=e.response.status_code,
-            detail=e.response.json() if e.response.content else e.response.text,
+            detail=detail,
         )
     except Exception as e:
         print(f"Gateway error: {e}")
